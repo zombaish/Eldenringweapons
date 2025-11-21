@@ -152,3 +152,11 @@ header h1 {
     box-shadow: 0 0 14px #f6b93b;
     max-height: 260px;
 }
+
+.github-btn {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    filter: invert();
+    height: 2vh;
+}
