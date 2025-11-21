@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elden Ring Weapons</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    body {
+        background: linear-gradient(160deg, #0b0b0b, #151515);
+        font-family: 'Georgia', serif;
+    }
+
+    header h1 {
+        color: #f5d88f;
+        text-shadow: 0 0 10px #f5d88f;
+    }
+
+    .search-box {
+        background: #1a1a1a;
+        border: 1px solid #e8a93b;
+        color: #f5d88f;
+        padding: 12px 16px;
+        width: 100%;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+        box-shadow: 0 0 12px #f6b93b;
+        border-color: #f6b93b;
+    }
+
+    .category-btn {
+        transition: all 0.3s ease;
+        background-color: #1a1a1a;
+        color: #f5d88f;
+        border: 1px solid #e8a93b;
+        border-radius: 10px;
+        font-size: 1rem;
+        padding: 12px 18px;
+        white-space: nowrap;
+    }
+
+    .category-btn:hover,
+    .category-btn.active {
+        background-color: #2d2415;
+        color: #fff5d0;
+        border-color: #f6b93b;
+        box-shadow: 0 0 14px #f6b93b;
+    }
+
+    .weapon-item {
+        background: rgba(40, 32, 20, 0.85);
+        border: 1px solid #e8a93b;
+        border-radius: 10px;
+        text-align: center;
+        padding: 1.2rem;
+        font-weight: 600;
+        color: #fff4d0;
+        transition: all 0.35s ease;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    .weapon-item.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .weapon-item:hover {
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 0 18px #f6b93b;
+    }
+
+    .category-label {
+        grid-column: 1 / -1;
+        text-align: left;
+        padding: 0.25rem 0.5rem;
+        color: #f5d88f;
+        font-weight: 700;
+    }
+</style>
+</head>
+
+<body>
+
+<header class="p-5 text-center border-b border-gray-800">
+    <h1 class="text-4xl font-bold">Elden Ring Weapons</h1>
+</header>
+
+<main class="p-5">
+
+    <div class="mb-6">
+        <input 
+            id="searchInput" 
+            type="text" 
+            placeholder="Search weapons..." 
+            class="search-box"
+            oninput="filterWeapons()"
+        >
+    </div>
+
+    <div class="overflow-x-auto whitespace-nowrap mb-8 py-2">
+        <div id="categories" class="flex space-x-3"></div>
+    </div>
+
+    <div id="weapons" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+
+</main>
+
+<script>
+const categories = [
+    "Daggers","Straight Swords","Light Greatswords","Greatswords","Colossal Swords",
+    "Thrusting Swords","Heavy Thrusting Swords","Curved Swords","Curved Greatswords",
+    "Backhand Blades","Katanas","Great Katanas","Twinblades","Axes","Greataxes",
+    "Hammers","Flails","Great Hammers","Colossal Weapons","Spears","Great Spears",
+    "Halberds","Reapers","Whips","Fists","Claws","Beast Claws","Hand-to-Hand Arts",
+    "Perfume Bottles","Light Bows","Bows","Greatbows","Crossbows","Ballistas",
+    "Glintstone Staves","Sacred Seals","Torches","Throwing Blades","Thrusting Shields",
+    "Small Shields","Medium Shields","Greatshields"
+];
+
+const categoriesContainer = document.getElementById('categories');
+const weaponsContainer = document.getElementById('weapons');
+let currentCategory = categories[0];
+let currentCategoryButton = null;
+
+categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.className = "category-btn";
+    btn.addEventListener('click', () => showWeapons(cat, btn));
+    categoriesContainer.appendChild(btn);
+});
+
+function generateWeaponsForCategory(cat) {
+    if (cat === "Daggers") {
+        return [
+            { name: "Black Knife", category: cat },
+            { name: "Blade of Calling", category: cat },
+            { name: "Bloodstained Dagger", category: cat },
+            { name: "Celebrant's Sickle", category: cat },
+            { name: "Cinquedea", category: cat },
+            { name: "Crystal Knife", category: cat },
+            { name: "Dagger", category: cat },
+            { name: "Erdsteel Dagger", category: cat },
+            { name: "Fire Knight's Shortsword", category: cat },
+            { name: "Glintstone Kris", category: cat },
+            { name: "Great Knife", category: cat },
+            { name: "Ivory Sickle", category: cat },
+            { name: "Main-gauche", category: cat },
+            { name: "Miséricorde", category: cat },
+            { name: "Parrying Dagger", category: cat },
+            { name: "Reduvia", category: cat },
+            { name: "Scorpion's Stinger", category: cat },
+            { name: "Smithscript Dagger", category: cat },
+            { name: "Wakizashi", category: cat }
+        ];
+    }
+
+    const list = [];
+    for (let i = 1; i <= 10; i++) {
+        list.push({ name: `${cat} ${i}`, category: cat });
+    }
+    return list;
+}
+
+const allWeapons = [];
+categories.forEach(cat => {
+    allWeapons.push(...generateWeaponsForCategory(cat));
+});
+
+function showWeapons(category, button) {
+    currentCategory = category;
+    if (currentCategoryButton) currentCategoryButton.classList.remove('active');
+    currentCategoryButton = button;
+    currentCategoryButton.classList.add('active');
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput.value.trim() !== '') {
+        searchInput.value = '';
+    }
+
+    renderWeapons(allWeapons.filter(w => w.category === category));
+}
+
+function renderWeapons(weapons, highlightQuery = '') {
+    weaponsContainer.innerHTML = '';
+    let lastCategory = null;
+    weapons.forEach((w, idx) => {
+        if (weapons.length > 0 && w.category !== lastCategory) {
+            if (weapons.some(x => x.category === w.category) && weapons.length !== allWeapons.length) {
+                const label = document.createElement('div');
+                label.className = 'category-label';
+                label.textContent = w.category;
+                weaponsContainer.appendChild(label);
+            }
+            lastCategory = w.category;
+        }
+        const weapon = document.createElement('div');
+        weapon.className = 'weapon-item show';
+        weapon.textContent = w.name;
+        weaponsContainer.appendChild(weapon);
+        weapon.style.transitionDelay = `${(idx % 10) * 40}ms`;
+    });
+}
+
+function filterWeapons() {
+    const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (searchValue === '') {
+        renderWeapons(allWeapons.filter(w => w.category === currentCategory));
+        return;
+    }
+
+    const matches = [];
+    categories.forEach(cat => {
+        if (cat.toLowerCase().includes(searchValue)) {
+            allWeapons.forEach(w => { if (w.category === cat) matches.push(w); });
+        }
+    });
+    allWeapons.forEach(w => {
+        if (w.name.toLowerCase().includes(searchValue)) {
+            if (!matches.some(m => m.name === w.name)) matches.push(w);
+        }
+    });
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+    renderWeapons(matches);
+}
+
+const firstBtn = document.querySelectorAll('.category-btn')[0];
+if (firstBtn) showWeapons(categories[0], firstBtn);
+</script>
+
+</body>
+</html>
