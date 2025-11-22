@@ -550,5 +550,11 @@
     "Redmane Greatshield",
     "Spiked Palisade Shield",
     "Verdigris Greatshield",
+    "Visage Shield",
+    "Wooden Greatshield"
+  ],
+  "Thrusting Shields": [
+    "Carian Thrusting Shield",
+    "Dueling Shield"
   ]
 }
