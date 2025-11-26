@@ -14,7 +14,7 @@ function openWeaponModal(weapon) {
     }
 
     const file = weapon.name.replace(/ /g, '_');
-    modalImage.src = `/cdn/img/${file}.jpeg`;
+    modalImage.src = `/cdn/img/${file}.png`;
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
